@@ -1,3 +1,5 @@
+# **Step 1 --- Fetch Data From Binance**
+
 import os
 import requests
 #print(requests.__version__)
@@ -20,10 +22,13 @@ print(df.info())
 
 def save_raw_csv(df, symbol, interval):
 
-#Save a DataFrame into data/raw/(symbol_interval).csv
+#Saving the DataFrame into data/raw/(symbol_interval).csv
     os.makedirs("data/raw", exist_ok=True)
     file_path = f"data/raw/{symbol}_{interval}.csv"
     df.to_csv(file_path, index=False)
     print(f"Saved: {file_path}")
 
 save_raw_csv(df, "BTCUSDT", "1d")
+
+
+# **Step 2 --- Data Cleaning & Basic Processing**
