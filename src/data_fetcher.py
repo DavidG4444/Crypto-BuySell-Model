@@ -32,3 +32,4 @@ save_raw_csv(df, "BTCUSDT", "1d")
 
 
 # **Step 2 --- Data Cleaning & Basic Processing**
+df["ignore"].value_counts()
