@@ -14,3 +14,24 @@ The goal is to create a fully functioning ML system that:
 
 This is a realistic applied-finance ML workflow similar to what quant
 researchers build.
+
+## Project Documentation
+To clone this project;
+- Copy the URL code from the GitHub repo
+- Use the 'git clone' command to clone the repository into your local computer i.e git clone <insert copied URL>
+
+- This project uses the following libraries with all the versions detailed in the requirements.txt file in the main branch.
+OS
+Numpy
+Pandas
+TA-Lib
+
+- The project is divided into notebooks as well as src, which are different folders.
+The notebooks and src folders and files map as follows:
+
+01_fetch_data.ipynb -> data_fetcher.py
+02_feature_engineering.ipynb -> feature_generator.py
+03_model_training.ipynb -> labeler.py & predict.py
+04_evaluation.ipynb -> train.py
+
+- Each file contains comments which give a more logical meaning to the code allowing for better understanding of the code.
