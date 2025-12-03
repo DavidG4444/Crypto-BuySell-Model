@@ -35,3 +35,10 @@ The notebooks and src folders and files map as follows:
 - 04_evaluation.ipynb -> train.py
 
 Each file contains comments which give a more logical meaning to the code allowing for better understanding of the code.
+
+These stand as unexplained in this project
+- df.info() -  provides a concise summary of a DataFrame
+
+- df.head() -  displays the first few rows of a DataFrame
+
+- df.tail() -  displays the last few rows of a DataFrame
