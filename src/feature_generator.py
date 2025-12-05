@@ -151,12 +151,4 @@ def label(row):
 
 df["label"] = df.apply(label, axis=1)
 
-def save_processed_csv(df, symbol, interval):
 
-#Save a DataFrame into data/raw/(symbol_interval).csv
-    os.makedirs("data/processed", exist_ok=True)
-    file_path = f"data/processed/{symbol}_{interval}.csv"
-    df.to_csv(file_path, index=False)
-    print(f"Saved: {file_path}")
-
-save_processed_csv(df, "BTCUSDT", "1dmodified")
