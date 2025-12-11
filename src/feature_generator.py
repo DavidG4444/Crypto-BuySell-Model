@@ -134,21 +134,3 @@ ax2.grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.show()
-
-
-# Step 4 --- Label Generation (Target Variable)
-
-#Creating target labels based on future returns
-df["future_return"] = df["close"].pct_change().shift(-1)
-
-def label(row):
-    if row["future_return"] > 0.02:
-        return 2
-    elif row["future_return"] < -0.02:
-        return 0
-    else:
-        return 1
-
-df["label"] = df.apply(label, axis=1)
-
-
