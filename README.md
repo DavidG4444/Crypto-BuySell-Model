@@ -31,8 +31,8 @@ The notebooks and src folders and files map as follows:
 
 - 01_fetch_data.ipynb -> data_fetcher.py
 - 02_feature_engineering.ipynb -> feature_generator.py
-- 03_model_training.ipynb -> labeler.py & predict.py
-- 04_evaluation.ipynb -> train.py
+- 03_model_training.ipynb -> labeler.py
+- 04_evaluation.ipynb -> predict.py & train.py
 
 Each file contains comments which give a more logical meaning to the code allowing for better understanding of the code.
 

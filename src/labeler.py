@@ -18,7 +18,7 @@ def save_processed_csv(df, symbol, interval):
 
 save_processed_csv(df, "BTCUSDT", "1dmodified2")
 
-df = pd.read_csv("data/processed/BTCUSDT_1dmod.csv")
+df = pd.read_csv("data/processed/BTCUSDT_1dmodified2.csv")
 df.info()
 
 #Creating target labels based on future returns
@@ -255,3 +255,14 @@ print("\nClassification Report:")
 print(classification_report(y_val, y_val_pred, digits=4))
 
 df_clean.info()
+
+#Function to save and store csv file of data obtained
+def save_processed_csv(df, data_ref):
+
+#Save a DataFrame into data/processed/(symbol_interval).csv
+    os.makedirs("data/processed", exist_ok=True)
+    file_path = f"data/processed/{data_ref}.csv"
+    df.to_csv(file_path, index=False)
+    print(f"Saved: {file_path}")
+
+save_processed_csv(df_clean, "training_data")
