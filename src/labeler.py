@@ -89,13 +89,31 @@ plt.title('Feature Correlation Matrix')
 plt.show()
 
 #Define features and target
+drop_cols = [
+    'open_time',
+    'close_time',
+    'ignore',
+    'future_return',
+    'label'
+]
 
-target_col = "label"  #column with your Buy/Sell/Hold labels
-feature_cols = df_clean.columns.difference([target_col, "future_return", "open_time", "close_time"])
+# Get feature columns (already sorted alphabetically from data_preparation.py)
+feature_cols = [col for col in df_clean.columns if col not in drop_cols]
 
+print(f"Features: {len(feature_cols)} columns")
+print(f"Feature columns:")
+for i, col in enumerate(feature_cols, 1):
+    print(f"  {i:2d}. {col}")
+
+# Separate features (X) and target (y)
 X = df_clean[feature_cols]
-y = df_clean[target_col]
+y = df_clean['label']
 
+print(f"\nTarget distribution:")
+for label, count in y.value_counts().sort_index().items():
+    print(f"  Class {label}: {count} samples ({count/len(y)*100:.1f}%)")
+
+print()
 
 #Train/Validation/Test split
 
@@ -122,6 +140,7 @@ print(f"Test: {len(X_test)} samples ({len(X_test)/len(df)*100:.1f}%)")
 
 ## Step 6 --- Model Training
 #Importing all the necessary libraries
+import os
 import xgboost
 import tensorflow
 import seaborn as sns
@@ -136,6 +155,25 @@ from keras.models import Sequential
 from keras.layers import LSTM, Dense, GRU
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 
+
+#Setting up paths for the data and models
+#Get the absolute path to project root
+# __file__ gives current script location
+# os.path.dirname() goes up one directory level
+current_script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_script_dir)
+
+#Defining paths for data and models
+models= os.path.join(project_root, "models")
+
+# Create models folder if it doesn't exist
+# exist_ok=True means no error if folder already exists
+os.makedirs(models, exist_ok=True)
+
+print(f"Project root: {project_root}")
+print(f"Models will be saved to: {models}\n")
+
+#Peforming Model Training with various models
 #A function to calculate and print all evaluation metrics
 def calculate_metrics(y_true, y_pred, model_name, dataset_name):
 
@@ -156,9 +194,6 @@ def calculate_metrics(y_true, y_pred, model_name, dataset_name):
         'recall': recall,
         'f1': f1
     }
-
-#Peforming Model Training with various models
-
 #Logistic Regression Model
 from sklearn.linear_model import LogisticRegression
 model_lr = LogisticRegression(multi_class='multinomial', solver='lbfgs', class_weight='balanced')
@@ -226,12 +261,12 @@ lgbm_val_metrics = calculate_metrics(y_val, lgbm_val_pred, "LightGBM", "Validati
 lgbm_test_metrics = calculate_metrics(y_test, lgbm_test_pred, "LightGBM", "Test")
 
 #XGBoost Model
-model = XGBClassifier()
-model.fit(X_train, y_train)
+xgb_model = XGBClassifier()
+xgb_model.fit(X_train, y_train)
 
 
 #CatBoost Model
-model_cat = CatBoostClassifier(
+cat_model = CatBoostClassifier(
     iterations=500,
     learning_rate=0.05,
     depth=6,
@@ -242,10 +277,10 @@ model_cat = CatBoostClassifier(
 )
 
 #Train
-model_cat.fit(X_train, y_train, eval_set=(X_val, y_val), early_stopping_rounds=50)
+cat_model.fit(X_train, y_train, eval_set=(X_val, y_val), early_stopping_rounds=50)
 
 #Predict
-y_val_pred = model_cat.predict(X_val)
+y_val_pred = cat_model.predict(X_val)
 
 #Evaluation
 print("Confusion Matrix:")
@@ -266,3 +301,25 @@ def save_processed_csv(df, data_ref):
     print(f"Saved: {file_path}")
 
 save_processed_csv(df_clean, "training_data")
+
+import joblib
+
+print("="*60)
+print("Saving the models to the models/ folder")
+print("="*60)
+
+
+# Save each model with descriptive filename
+joblib.dump(rf_model,   os.path.join(models, "Random_Forest_Model.pkl"))
+joblib.dump(lgbm_model, os.path.join(models, "LightGBM_Model.pkl"))
+joblib.dump(xgb_model,  os.path.join(models, "XGBoost_Model.pkl"))
+joblib.dump(cat_model,  os.path.join(models, "CatBoost_Model.pkl"))
+
+# Confirm files were saved
+print(f"Models saved in: {models}")
+print(f"Saved files: {os.listdir(models)}")
+
+print("\n" + "="*60)
+print("ALL MODELS TRAINED AND SAVED SUCCESSFULLY!")
+print("="*60)
+print("\nNext step: Run evaluate.py to compare performance")
